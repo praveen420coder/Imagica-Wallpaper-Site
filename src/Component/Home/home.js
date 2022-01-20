@@ -99,7 +99,7 @@ const Home = (props) => {
     myTextbox.onchange = function () {
       nameValue = myTextbox.value;
     };
-
+    setImgCount(0);
     setQuery(nameValue);
     unsplash();
   };
