@@ -16,11 +16,12 @@ const Home = (props) => {
   let [data, setPhotosResponse] = useState(null);
   let [imgcount, setImgCount] = useState(0);
   let [id, setId] = useState("n-2_KHgeAy0");
-  let [total, setTotal] = useState(30);
+  let [total, setTotal] = useState(100);
+  let [active, setActive] = useState(false);
 
   useEffect(() => {
     unsplash();
-  }, [imgcount, query]);
+  }, [query]);
   const api = createApi({
     accessKey: "ZYe2aTx96Vdhb5vEmlUW9rLrxS017xyWMrUSfXGUSPY",
   });
@@ -46,15 +47,15 @@ const Home = (props) => {
         query: query,
         count: 20,
         orientation: "landscape",
-        perPage: 100,
+        perPage: 30,
       })
       .then((result) => {
         setId(result.response.results[imgcount].id);
         setPhotosResponse(result);
-        setTotal(result.response.total);
+        setTotal(result.response.results.length);
         console.log(total);
 
-        console.log(id);
+        // console.log(id);
 
         console.log(result);
       })
@@ -79,7 +80,11 @@ const Home = (props) => {
           <button className="arrow" onClick={handleImageChangeLeft}>
             <FontAwesomeIcon className="icon" icon={faAngleDoubleLeft} />
           </button>
-          <button className="arrow2" onClick={handleImageChangeRight}>
+          <button
+            className="arrow2"
+            onClick={handleImageChangeRight}
+            disabled={active}
+          >
             <FontAwesomeIcon className="icon" icon={faAngleDoubleRight} />
           </button>
           <PhotoComp photo={data.response.results[imgcount]} />
@@ -99,8 +104,12 @@ const Home = (props) => {
     unsplash();
   };
   const handleImageChangeRight = () => {
-    if (imgcount < total) {
+    if (imgcount + 1 < total) {
       setImgCount((imgcount += 1));
+      Body();
+    } else {
+      setActive(false);
+
       Body();
     }
   };
