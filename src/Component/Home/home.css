@@ -11,7 +11,7 @@
   margin-left: 300px;
 }
 .picture {
-  margin-top: 20px;
+  margin-top: 0px;
   margin-left: 60px;
   width: 99%;
   margin-right: 20px;
@@ -110,12 +110,22 @@ input:focus {
   position: relative;
   top: 50vh;
   left: 45px;
+  background: transparent;
+  height: 24px;
+  color: #aebbc4;
+  border: none;
+  font-size: 50px;
 }
 .arrow2 {
   position: relative;
   top: 50vh;
   float: right;
   left: 65px;
+  background: transparent;
+  height: 24px;
+  color: #aebbc4;
+  border: none;
+  font-size: 50px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -147,12 +157,16 @@ input:focus {
     height: 620px;
   }
   .arrow {
-    top: 46vh;
+    top: 38vh;
     left: 7px;
+    font-size: 20px;
+    color: #3498db;
   }
   .arrow2 {
-    top: 46vh;
+    top: 38vh;
     left: -9px;
+    font-size: 20px;
+    color: #3498db;
   }
   .menu {
     margin: 5px 5px 5px 5px;
@@ -168,5 +182,8 @@ input:focus {
   }
   .btn {
     margin-left: 40px;
+  }
+  .credit {
+    margin-left: 10px;
   }
 }

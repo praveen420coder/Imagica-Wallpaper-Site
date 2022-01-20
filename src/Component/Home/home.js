@@ -16,6 +16,7 @@ const Home = (props) => {
   let [data, setPhotosResponse] = useState(null);
   let [imgcount, setImgCount] = useState(0);
   let [id, setId] = useState("n-2_KHgeAy0");
+  let [total, setTotal] = useState(30);
 
   useEffect(() => {
     unsplash();
@@ -45,11 +46,13 @@ const Home = (props) => {
         query: query,
         count: 20,
         orientation: "landscape",
-        perPage: 30,
+        perPage: 100,
       })
       .then((result) => {
         setId(result.response.results[imgcount].id);
         setPhotosResponse(result);
+        setTotal(result.response.total);
+        console.log(total);
 
         console.log(id);
 
@@ -84,18 +87,7 @@ const Home = (props) => {
       );
     }
   };
-  //   const Download = () => {
-  //     api.photos.trackDownload({
-  //       downloadLocation: data.response.results[imgcount].links.download_location,
-  //     });
-  //   };
-  //   const handleChange = () => {
-  //     setQuery(document.forms["FormName"]["type"].value);
-  //   };
 
-  //   const Usevalue = () => {
-
-  //   };
   const handleSearch = () => {
     var myTextbox = document.getElementById("type");
     var nameValue = myTextbox.value;
@@ -104,18 +96,13 @@ const Home = (props) => {
     };
 
     setQuery(nameValue);
-    // document.getElementById("type").keyup(function (event) {
-    //   if (event.keyCode === 13) {
-    //     document.getElementById("search").click();
-    //     alert("buttonClicked");
-    //   }
-    // });
-    // setQuery(document.getElementById("type").value);
     unsplash();
   };
   const handleImageChangeRight = () => {
-    setImgCount((imgcount += 1));
-    Body();
+    if (imgcount < total) {
+      setImgCount((imgcount += 1));
+      Body();
+    }
   };
   const handleImageChangeLeft = () => {
     if (imgcount > 0) {
