@@ -1,14 +1,25 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./home.css";
 import { createApi } from "unsplash-js";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
+} from "@fortawesome/free-solid-svg-icons";
 /**
  * @author
  * @function Home
  **/
 
 const Home = (props) => {
-  const [query, setQuery] = useState("nature");
+  let [query, setQuery] = useState("superhero");
+  let [data, setPhotosResponse] = useState(null);
+  let [imgcount, setImgCount] = useState(0);
+  let [id, setId] = useState("n-2_KHgeAy0");
+
+  useEffect(() => {
+    unsplash();
+  }, [imgcount, query]);
   const api = createApi({
     accessKey: "ZYe2aTx96Vdhb5vEmlUW9rLrxS017xyWMrUSfXGUSPY",
   });
@@ -17,6 +28,7 @@ const Home = (props) => {
     return (
       <Fragment>
         <img className="picture" alt="hey" src={photo.urls.regular} />
+
         <a
           className="credit"
           target="_blank"
@@ -27,27 +39,28 @@ const Home = (props) => {
       </Fragment>
     );
   };
+  const unsplash = () => {
+    api.search
+      .getPhotos({
+        query: query,
+        count: 20,
+        orientation: "landscape",
+        perPage: 30,
+      })
+      .then((result) => {
+        setId(result.response.results[imgcount].id);
+        setPhotosResponse(result);
+
+        console.log(id);
+
+        console.log(result);
+      })
+      .catch(() => {
+        console.log("something went wrong!");
+      });
+  };
 
   const Body = () => {
-    const [data, setPhotosResponse] = useState(null);
-
-    useEffect(() => {
-      api.photos
-        .getRandom({
-          query: "cat",
-          count: 1,
-        })
-        .then((result) => {
-          if (result.type === "success") {
-            setPhotosResponse(result.response[0]);
-          }
-          console.log(result);
-        })
-        .catch(() => {
-          console.log("something went wrong!");
-        });
-    }, []);
-
     if (data === null) {
       return <div>Loading...</div>;
     } else if (data.errors) {
@@ -60,15 +73,59 @@ const Home = (props) => {
     } else {
       return (
         <div className="feed">
-          <PhotoComp photo={data} />
+          <button className="arrow" onClick={handleImageChangeLeft}>
+            <FontAwesomeIcon className="icon" icon={faAngleDoubleLeft} />
+          </button>
+          <button className="arrow2" onClick={handleImageChangeRight}>
+            <FontAwesomeIcon className="icon" icon={faAngleDoubleRight} />
+          </button>
+          <PhotoComp photo={data.response.results[imgcount]} />
         </div>
       );
     }
   };
-  const handleChange = (e) => {
-    setQuery(e.target.value);
+  //   const Download = () => {
+  //     api.photos.trackDownload({
+  //       downloadLocation: data.response.results[imgcount].links.download_location,
+  //     });
+  //   };
+  //   const handleChange = () => {
+  //     setQuery(document.forms["FormName"]["type"].value);
+  //   };
+
+  //   const Usevalue = () => {
+
+  //   };
+  const handleSearch = () => {
+    var myTextbox = document.getElementById("type");
+    var nameValue = myTextbox.value;
+    myTextbox.onchange = function () {
+      nameValue = myTextbox.value;
+    };
+    // nameValue.addEventListener("keyup", function (event) {
+    //   // Number 13 is the "Enter" key on the keyboard
+    //   if (event.keyCode === 13) {
+    //     // Cancel the default action, if needed
+    //     event.preventDefault();
+    //     // Trigger the button element with a click
+    //     document.getElementById("search").click();
+    //   }
+    // });
+    setQuery(nameValue);
+    // setQuery(document.getElementById("type").value);
+    unsplash();
   };
-  const handleImageChange = () => {};
+  const handleImageChangeRight = () => {
+    setImgCount((imgcount += 1));
+    Body();
+  };
+  const handleImageChangeLeft = () => {
+    if (imgcount > 0) {
+      setImgCount((imgcount -= 1));
+      Body();
+    }
+  };
+
   const Navbar = () => {
     return (
       <div className="navbar">
@@ -76,20 +133,30 @@ const Home = (props) => {
 
         <div className="container">
           <div className="section1">
-            <select class="menu" id="type" onChange={handleChange}>
-              <option value="colors">Background Color</option>
-              <option value="cars">Cars</option>
-              <option value="building">Buildings</option>
-              <option value="nature">Nature</option>
-            </select>
+            <form method="post" name="FromName">
+              <input
+                className="menu"
+                type="text"
+                id="type"
+                defaultValue={query}
+                //   onChange={(event) => setQuery(event.target.value)}
+              />
+            </form>
           </div>
-          {/* <div className="section2">
-            <button className="button search">Search</button>
-          </div> */}
-          <button className="button" onClick={handleImageChange}>
-            Change Image
-          </button>
-          <button className="button">Download Image</button>
+          <div className="section2">
+            <button className="btn" id="search" onClick={handleSearch}>
+              Search
+            </button>
+            <button className="btn">
+              <a
+                href={`https://unsplash.com/photos/${id}/download?ixid=ZYe2aTx96Vdhb5vEmlUW9rLrxS017xyWMrUSfXGUSPY&force=true`}
+                download="sc"
+              >
+                Download
+              </a>
+            </button>
+          </div>
+          {/* <button className="btn">Change Image</button> */}
         </div>
       </div>
     );
@@ -98,6 +165,7 @@ const Home = (props) => {
     <div className="home">
       <Navbar></Navbar>
       <div className="imageBox">
+        {/* {unsplash()} */}
         <Body />
       </div>
     </div>
