@@ -102,16 +102,14 @@ const Home = (props) => {
     myTextbox.onchange = function () {
       nameValue = myTextbox.value;
     };
-    // nameValue.addEventListener("keyup", function (event) {
-    //   // Number 13 is the "Enter" key on the keyboard
+
+    setQuery(nameValue);
+    // document.getElementById("type").keyup(function (event) {
     //   if (event.keyCode === 13) {
-    //     // Cancel the default action, if needed
-    //     event.preventDefault();
-    //     // Trigger the button element with a click
     //     document.getElementById("search").click();
+    //     alert("buttonClicked");
     //   }
     // });
-    setQuery(nameValue);
     // setQuery(document.getElementById("type").value);
     unsplash();
   };
@@ -125,6 +123,11 @@ const Home = (props) => {
       Body();
     }
   };
+  const handleKey = (event) => {
+    if (event.keyCode == 13) {
+      document.getElementById("search").click();
+    }
+  };
 
   const Navbar = () => {
     return (
@@ -133,18 +136,24 @@ const Home = (props) => {
 
         <div className="container">
           <div className="section1">
-            <form method="post" name="FromName">
-              <input
-                className="menu"
-                type="text"
-                id="type"
-                defaultValue={query}
-                //   onChange={(event) => setQuery(event.target.value)}
-              />
-            </form>
+            {/* <form method="post" name="FromName"> */}
+            <input
+              className="menu"
+              type="text"
+              id="type"
+              defaultValue={query}
+              onKeyDown={handleKey}
+              //   onChange={(event) => setQuery(event.target.value)}
+            />
+            {/* </form> */}
           </div>
           <div className="section2">
-            <button className="btn" id="search" onClick={handleSearch}>
+            <button
+              type="submit"
+              className="btn"
+              id="search"
+              onClick={handleSearch}
+            >
               Search
             </button>
             <button className="btn">
